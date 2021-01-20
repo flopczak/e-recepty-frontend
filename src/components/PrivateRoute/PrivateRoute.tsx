@@ -1,26 +1,26 @@
 import * as React from 'react';
-import { Redirect, Route, RouteProps } from 'react-router';
+import { Redirect, Route } from 'react-router';
+import { connect } from "react-redux"
 
-export interface ProtectedRouteProps extends RouteProps {
-    isAuthenticated: boolean;
-    isAllowed: boolean;
-    restrictedPath: string;
-    authenticationPath: string;
-}
 
-export const PrivateRoute: React.FC<ProtectedRouteProps> = props => {
-    let redirectPath = '';
-    if (!props.isAuthenticated) {
-        redirectPath = props.authenticationPath;
-    }
-    if (props.isAuthenticated && !props.isAllowed) {
-        redirectPath = props.restrictedPath;
-    }
 
-    if (redirectPath) {
-        const renderComponent = () => <Redirect to={{ pathname: redirectPath }} />;
-        return <Route {...props} component={renderComponent} render={undefined} />;
-    } else {
-        return <Route {...props} />;
-    }
+const PrivateRoute = ({component: Component, isAuthenticated, ...rest}) => {
+
+    return (
+        <Route
+            {...rest}
+            render={(props: any) => {
+                if (!isAuthenticated) {
+                    return <Redirect to="/login" />;
+                } else {
+                    return <Component {...props} />;
+                }
+            }}
+        />
+    );
 };
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps)(PrivateRoute);
