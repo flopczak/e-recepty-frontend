@@ -65,10 +65,7 @@ const Register = () => {
                             <Field placeholder={"login"} label={"Login"} variant="outlined" margin="normal" name={"login"} type={"input"} as={TextFieldWrapper}/>
                             <Field placeholder={"email"} label={"Email"}  variant="outlined" margin="normal" name={"email"} type={"input"} as={TextFieldWrapper}/>
                             <Field placeholder={"password"} label={"Password"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
-                            <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign In</Button>
-                            <pre>
-                            {/*{JSON.stringify(values, null, 2)}*/}
-                        </pre>
+                            <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign Up</Button>
                             <Grid container>
                                 <Grid item>
                                     <Link href="/#/login" variant="body2">
