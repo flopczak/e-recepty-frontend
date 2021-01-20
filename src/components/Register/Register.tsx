@@ -67,11 +67,11 @@ const Register = () => {
                             <Field placeholder={"password"} label={"Password"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
                             <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign In</Button>
                             <pre>
-                            {JSON.stringify(values, null, 2)}
+                            {/*{JSON.stringify(values, null, 2)}*/}
                         </pre>
                             <Grid container>
                                 <Grid item>
-                                    <Link href="#" variant="body2">
+                                    <Link href="/#/login" variant="body2">
                                         {"Already have an account? Sign In"}
                                     </Link>
                                 </Grid>
