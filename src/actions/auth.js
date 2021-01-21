@@ -8,8 +8,9 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISRER_FAIL,
-  REGISTER_SUCCESS,
+  REGISTER_SUCCESS, GET_ERRORS,
 } from "./types";
+
 
 export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
@@ -27,17 +28,17 @@ export const loadUser = () => (dispatch, getState) => {
     });
 };
 
-export const login = (username, password) => (dispatch) => {
+export const login = (login, password) => (dispatch) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  const body = JSON.stringify({ "email": username, password });
-
+  const body = JSON.stringify({login, password });
+  console.log(body);
   axios
-    .post("https://a8ec74f3c573.ngrok.io/login", body, config)
+    .post("https://recepty.eu.ngrok.io/login", body, config)
     .then((res) => {
       console.log(res);
       dispatch({
@@ -53,17 +54,17 @@ export const login = (username, password) => (dispatch) => {
     });
 };
 
-export const register = ({ username, password, email }) => (dispatch) => {
+export const register = ({ login, password, email }) => (dispatch) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  const body = JSON.stringify({ username, password, email });
+  const body = JSON.stringify({ login, password, email });
 
   axios
-    .post("https://7c98ca4d5f2c.ngrok.io/register", body, config)
+    .post("https://recepty.eu.ngrok.io/register", body, config)
     .then((res) => {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -71,10 +72,17 @@ export const register = ({ username, password, email }) => (dispatch) => {
       });
     })
     .catch((err) => {
+      const error = {
+        msg: err.response.data,
+        status: err.response.status
+      }
       dispatch({
         type: REGISRER_FAIL,
       });
-      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: error
+      });
     });
 };
 

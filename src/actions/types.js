@@ -1,6 +1,3 @@
-export const GET_ACCOUNTS = "GET_ACCOUNTS";
-export const DELETE_ACCOUNT = "DELETE_ACCOUNT";
-export const ADD_ACCOUNT = "ADD_ACCOUNT";
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
@@ -10,3 +7,6 @@ export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 // export const LOGOUT_FAIL = "LOGOUT_FAIL";
 export const REGISRER_FAIL = "REGISTER_FAIL";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const GET_ERRORS = "GET_ERRORS";
+export const CLEAR_ERRORS = "CLEAR_ERRORS";
+

@@ -10,7 +10,9 @@ const Routes = () => {
     return (
         <Container>
             <Switch>
-                <PrivateRoute exact path="/" component={MainView} />
+                <Route exact path="/" component={MainView} />
+                <Route exact path="/" component={MainView} />
+                <Route exact path="/" component={MainView} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
             </Switch>

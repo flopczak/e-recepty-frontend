@@ -1,11 +1,11 @@
 import React from "react";
-
+import { Navbar } from "components";
 
 const MainView = () => {
 
     return(
         <div>
-            MainView
+            <Navbar/>
         </div>
     )
 }

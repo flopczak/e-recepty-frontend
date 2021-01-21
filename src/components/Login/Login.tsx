@@ -3,10 +3,11 @@ import {Formik, Field, Form } from "formik";
 import {makeStyles} from '@material-ui/core/styles';
 import {Button, Container, Grid, Link, Typography, CssBaseline} from "@material-ui/core";
 import TextFieldWrapper from "../TextFieldWrapper/TextFieldWrapper";
-import { connect, getState } from "react-redux";
+import { connect } from "react-redux";
 import { login } from "../../actions/auth"
 import * as yup from "yup";
 import {Redirect} from "react-router";
+import {ErrorHandler} from "../index";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -20,11 +21,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.secondary.main,
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(3),
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     },
 }));
 
@@ -36,6 +38,7 @@ const validationSchema = yup.object().shape({
 interface LoginProps {
     login: any;
     isAuthenticated?: boolean;
+    errorMessage?: { error: string };
 }
 
 const isLoged = ( props: LoginProps, classes) => {
@@ -44,6 +47,7 @@ const isLoged = ( props: LoginProps, classes) => {
             <Redirect to="/#" />
         )
     } else {
+        const msg = props.errorMessage?.error || "";
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -58,7 +62,6 @@ const isLoged = ( props: LoginProps, classes) => {
                                 console.log("submit", data)
                                 //here async call to backend
                                 props.login(data.login,data.password);
-
                                 setSubmitting(false)
                             }}
                     >
@@ -66,6 +69,7 @@ const isLoged = ( props: LoginProps, classes) => {
                             <Form onSubmit={handleSubmit} className={classes.form}>
                                 <Field placeholder={"login"} label={"Login"} variant="outlined" margin="normal" name={"login"} type={"input"} as={TextFieldWrapper}/>
                                 <Field placeholder={"password"} label={"Password"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
+                                <ErrorHandler msg={msg}/>
                                 <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign In</Button>
                                 <Grid container>
                                     <Grid item xs>
@@ -97,6 +101,7 @@ const Login = (props: LoginProps) => {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
+    errorMessage: state.errors.msg,
 });
 
 export default connect(mapStateToProps,{ login })(Login);

@@ -2,9 +2,14 @@ import React from 'react';
 import {Formik, Field, Form } from "formik";
 import {makeStyles} from '@material-ui/core/styles';
 import {Button, Container, Grid, Link, Typography, CssBaseline} from "@material-ui/core";
+import {ErrorHandler} from "../index";
 import * as yup from "yup";
 import TextFieldWrapper from "../TextFieldWrapper/TextFieldWrapper";
-import axios from "axios";
+import { connect } from "react-redux";
+import { register } from "../../actions/auth"
+import { clear } from "../../actions/errors"
+import {Redirect} from "react-router";
+import { sha256 } from "js-sha256";
 
 
 
@@ -25,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     },
 }));
 
@@ -34,51 +40,75 @@ const validationSchema = yup.object().shape({
     password: yup.string().required()
 })
 
-const Register = () => {
-    const classes = useStyles();
+interface RegisterProps {
+    register: any;
+    clear: any;
+    isAuthenticated?: boolean;
+    errorMessage?: { error: string };
+}
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    Sign Up
-                </Typography>
-                <Formik initialValues={{login: "", email: "", password: ""}}
-                        validationSchema={validationSchema}
-                        onSubmit={(data,{setSubmitting}) => {
-                            setSubmitting(true)
-                            axios.post('http://127.0.0.1:8000/api/user/register', {
-                                username: data.login,
-                                email: data.email,
-                                password: data.password
-                            }).then((response)=> {
-                                console.log(response);
-                            }).catch((error) => {
-                                console.log(error);
-                            })
-                            setSubmitting(false)
-                        }}
-                >
-                    {({values, handleSubmit, isSubmitting}) => (
-                        <Form onSubmit={handleSubmit} className={classes.form}>
-                            <Field placeholder={"login"} label={"Login"} variant="outlined" margin="normal" name={"login"} type={"input"} as={TextFieldWrapper}/>
-                            <Field placeholder={"email"} label={"Email"}  variant="outlined" margin="normal" name={"email"} type={"input"} as={TextFieldWrapper}/>
-                            <Field placeholder={"password"} label={"Password"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
-                            <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign Up</Button>
-                            <Grid container>
-                                <Grid item>
-                                    <Link href="/#/login" variant="body2">
-                                        {"Already have an account? Sign In"}
-                                    </Link>
+const isLoged = ( props: RegisterProps, classes) => {
+    if (props.isAuthenticated) {
+        props.clear()
+        return(
+            <Redirect to="/#" />
+        )
+    } else {
+        const msg = props.errorMessage?.error || "";
+        return (
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Typography component="h1" variant="h5">
+                        Sign Up
+                    </Typography>
+                    <Formik initialValues={{login: "", email: "", password: ""}}
+                            validationSchema={validationSchema}
+                            onSubmit={(data,{setSubmitting}) => {
+                                setSubmitting(true)
+                                const pass =sha256(data.password)
+
+                                props.register({
+                                    login: data.login,
+                                    password: pass,
+                                    email: data.email})
+                                setSubmitting(false)
+                            }}
+                    >
+                        {({values, handleSubmit, isSubmitting}) => (
+                            <Form onSubmit={handleSubmit} className={classes.form}>
+                                <Field placeholder={"login"} label={"Login"} variant="outlined" margin="normal" name={"login"} type={"input"} as={TextFieldWrapper}/>
+                                <Field placeholder={"email"} label={"Email"}  variant="outlined" margin="normal" name={"email"} type={"input"} as={TextFieldWrapper}/>
+                                <Field placeholder={"password"} label={"Password"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
+                                <ErrorHandler msg={msg}/>
+                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign Up</Button>
+                                <Grid container>
+                                    <Grid item>
+                                        <Link href="/#/login" variant="body2">
+                                            {"Already have an account? Sign In"}
+                                        </Link>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </Form>
-                    )}
-                </Formik>
-            </div>
-        </Container>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            </Container>
+        )
+    }
+}
+
+
+const Register = (props: RegisterProps) => {
+    const classes = useStyles();
+    return (
+            isLoged(props, classes)
     );
 }
 
-export default Register;
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    errorMessage: state.errors.msg
+});
+
+export default connect(mapStateToProps, { register, clear })(Register);
