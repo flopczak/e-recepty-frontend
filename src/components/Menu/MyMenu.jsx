@@ -10,6 +10,7 @@ import SendIcon from '@material-ui/icons/Send';
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import { withRouter } from "react-router-dom"
+import useReactRouter from "use-react-router";
 
 
 const StyledMenu = withStyles({
@@ -45,6 +46,7 @@ const StyledMenuItem = withStyles((theme) => ({
 
 const MyMenu = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const {history} = useReactRouter();
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -54,7 +56,7 @@ const MyMenu = (props) => {
         setAnchorEl(null);
     };
     const  handleMenuClick = (redirectDirection) => {
-
+        history.push(`/${redirectDirection}`)
     }
 
 
@@ -70,23 +72,17 @@ const MyMenu = (props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <StyledMenuItem>
+                <StyledMenuItem onClick={() => handleMenuClick("newPrescription")}>
                     <ListItemIcon>
                         <SendIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="Sent mail" />
+                    <ListItemText primary="Dodaj recepte" />
                 </StyledMenuItem>
-                <StyledMenuItem>
+                <StyledMenuItem onClick={() => handleMenuClick("user") }>
                     <ListItemIcon>
                         <DraftsIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="Drafts" />
-                </StyledMenuItem>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <InboxIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Inbox" />
+                    <ListItemText primary="Historia recept pacjenta" />
                 </StyledMenuItem>
             </StyledMenu>
         </div>

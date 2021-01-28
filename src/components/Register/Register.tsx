@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Formik, Field, Form } from "formik";
 import {makeStyles} from '@material-ui/core/styles';
 import {Button, Container, Grid, Link, Typography, CssBaseline} from "@material-ui/core";
@@ -8,7 +8,7 @@ import TextFieldWrapper from "../TextFieldWrapper/TextFieldWrapper";
 import { connect } from "react-redux";
 import { register } from "../../actions/auth"
 import { clear } from "../../actions/errors"
-import {Redirect} from "react-router";
+import {Redirect, useHistory} from "react-router";
 import { sha256 } from "js-sha256";
 
 
@@ -34,10 +34,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+//TODO poprawić walidacje
 const validationSchema = yup.object().shape({
-    login: yup.string().required().min(4).max(25),
+    login: yup.string()
+        .required("Pole login nie może być puste")
+        .min(4, "Pole login musi zawierać conajmniej 4 znaki")
+        .max(15, "Pole login może zawierać maksymalnie 15 znaków"),
+    password: yup.string().required("Pole hasło nie może być puste")
+        .min(8, "Hasło musi zawierać conajmniej 8 znaków")
+        .max(25, "Hasło może zawierać maksymalnie 25 znaków"),
+        // .matches(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/, "Hasło musi zawierać conajmniej jedną wielką literę, jedną małą, jedną cyfrę oraz jeden znak specjalny"),
     email: yup.string().email().required(),
-    password: yup.string().required()
+    password2: yup.string().required()
 })
 
 interface RegisterProps {
@@ -47,9 +55,9 @@ interface RegisterProps {
     errorMessage?: { error: string };
 }
 
-const isLoged = ( props: RegisterProps, classes) => {
+const isLoged = ( props: RegisterProps, classes, history) => {
+    let passMatch = true;
     if (props.isAuthenticated) {
-        props.clear()
         return(
             <Redirect to="/#" />
         )
@@ -60,32 +68,41 @@ const isLoged = ( props: RegisterProps, classes) => {
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Typography component="h1" variant="h5">
-                        Sign Up
+                        Rejestracja
                     </Typography>
-                    <Formik initialValues={{login: "", email: "", password: ""}}
-                            validationSchema={validationSchema}
+                    <Formik initialValues={{pwz: "", password: "", surname: "" , name:"" ,password2: ""}}
+                            // validationSchema={validationSchema}
                             onSubmit={(data,{setSubmitting}) => {
                                 setSubmitting(true)
-                                const pass =sha256(data.password)
+                                if (data.password !== data.password2 ){
+                                    passMatch = false;
+                                } else {
+                                    const pass =sha256(data.password)
 
-                                props.register({
-                                    login: data.login,
-                                    password: pass,
-                                    email: data.email})
+                                    props.register({
+                                        password: pass,
+                                        pwz: data.pwz,
+                                        name: `${data.name} ${data.surname}`})
+                                }
                                 setSubmitting(false)
                             }}
                     >
                         {({values, handleSubmit, isSubmitting}) => (
                             <Form onSubmit={handleSubmit} className={classes.form}>
-                                <Field placeholder={"login"} label={"Login"} variant="outlined" margin="normal" name={"login"} type={"input"} as={TextFieldWrapper}/>
-                                <Field placeholder={"email"} label={"Email"}  variant="outlined" margin="normal" name={"email"} type={"input"} as={TextFieldWrapper}/>
-                                <Field placeholder={"password"} label={"Password"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
+                                <Field placeholder={"Imię"} label={"Imię"} variant="outlined" margin="normal" name={"name"} type={"input"} as={TextFieldWrapper}/>
+                                <Field placeholder={"Nazwisko"} label={"Nazwisko"} variant="outlined" margin="normal" name={"surname"} type={"input"} as={TextFieldWrapper}/>
+                                <Field placeholder={"PWZ"} label={"PWZ"} variant="outlined" margin="normal" name={"pwz"} type={"input"} as={TextFieldWrapper}/>
+                                <Field placeholder={"Hasło"} label={"Hasło"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
+                                <Field placeholder={"Potwierdź hasło"} label={"Potwierdź hasło"} variant="outlined" margin="normal" name={"password2"} type={"password"} as={TextFieldWrapper}/>
                                 <ErrorHandler msg={msg}/>
-                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Sign Up</Button>
+                                {passMatch ? (<></>) : (
+                                    <ErrorHandler msg={"Hasła różnią się"}/>
+                                )}
+                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Zarejstruj</Button>
                                 <Grid container>
                                     <Grid item>
                                         <Link href="/#/login" variant="body2">
-                                            {"Already have an account? Sign In"}
+                                            {"Posiadzasz już konto? Zaloguj się"}
                                         </Link>
                                     </Grid>
                                 </Grid>
@@ -101,8 +118,13 @@ const isLoged = ( props: RegisterProps, classes) => {
 
 const Register = (props: RegisterProps) => {
     const classes = useStyles();
+    const history = useHistory();
+
+    useEffect(()=>{
+        props.clear()
+    },[])
     return (
-            isLoged(props, classes)
+            isLoged(props, classes, history)
     );
 }
 

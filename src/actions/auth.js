@@ -28,17 +28,16 @@ export const loadUser = () => (dispatch, getState) => {
     });
 };
 
-export const login = (login, password) => (dispatch) => {
+export const login = (pwz, password) => (dispatch) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  const body = JSON.stringify({login, password });
-  console.log(body);
+  const body = JSON.stringify({pwz, password });
   axios
-    .post("https://recepty.eu.ngrok.io/login", body, config)
+    .post("https://recepty.eu.ngrok.io/doctor/login", body, config)
     .then((res) => {
       console.log(res);
       dispatch({
@@ -47,24 +46,31 @@ export const login = (login, password) => (dispatch) => {
       });
     })
     .catch((err) => {
+      const error = {
+        msg: err.response.data,
+        status: err.response.status
+      }
       dispatch({
         type: LOGIN_FAIL,
       });
-      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: error
+      });
     });
 };
 
-export const register = ({ login, password, email }) => (dispatch) => {
+export const register = ({ pwz, password, name }) => (dispatch) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  const body = JSON.stringify({ login, password, email });
-
+  const body = JSON.stringify({ pwz, password, name });
+  console.log(body);
   axios
-    .post("https://recepty.eu.ngrok.io/register", body, config)
+    .post("https://recepty.eu.ngrok.io/doctor/register", body, config)
     .then((res) => {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -86,19 +92,19 @@ export const register = ({ login, password, email }) => (dispatch) => {
     });
 };
 
-export const logout = () => (dispatch, getState) => {
-  axios
-    .post("http://localhost:8000/api/auth/logout/", null, tokenConfig(getState))
-    .then((result) => {
+export const logout = () => (dispatch) => {
+  // axios
+    // .post("http://localhost:8000/api/auth/logout/", null, tokenConfig(getState))
+    // .then((result) => {
       dispatch({ type: LOGOUT_SUCCESS });
-    })
-    .catch((err) => {
-      console.log("/api/auth/logout error", err);
-    });
+    // })
+    // .catch((err) => {
+    //   console.log("/api/auth/logout error", err);
+    // });
 };
 
 export const tokenConfig = (getState) => {
-  const token = getState().auth.access_token;
+  const token = getState().auth.token;
 
   const config = {
     headers: {
@@ -107,7 +113,7 @@ export const tokenConfig = (getState) => {
   };
 
   if (token) {
-    config.headers["Authorization"] = `Token ${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 };
