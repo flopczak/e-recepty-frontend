@@ -6,6 +6,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import {AddPrescriptionView, Navbar} from "./components";
 import {connect} from "react-redux";
 import {useHistory} from "react-router";
+import PrescriptionExecutor from "./components/PerscriptionLogic/PrescriptionExecutor";
 
 const Routes = (props) => {
 
@@ -22,6 +23,7 @@ const Routes = (props) => {
                 <PrivateRoute exact path="/user/:id" component={UserPrescriptionsView} />
                 <PrivateRoute exact path="/prescription/:id" component={MainView} />
                 <PrivateRoute exact path="/newPrescription" component={AddPrescriptionView} />
+                <PrivateRoute exact path="/realisePrescription/:id" component={PrescriptionExecutor} />
                 {/*<Route exact path="/" component={MainView} />*/}
                 {/*<Route exact path="/user/:id" component={UserPrescriptionsView} />*/}
                 {/*<Route exact path="/prescription/:id" component={MainView} />*/}

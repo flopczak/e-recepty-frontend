@@ -4,8 +4,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import RealisePrescription from "../PerscriptionLogic/RealisePrescription";
-import PrescriptionDetails from "../PerscriptionLogic/PrescriptionDetails";
-
 
 const useStyles = makeStyles((theme) => ({
     root: {

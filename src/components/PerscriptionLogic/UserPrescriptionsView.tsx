@@ -1,7 +1,6 @@
 import React from "react";
 import PrescriptionCard, {ShortenPrescription} from "./PrescriptionCard";
 import Grid from '@material-ui/core/Grid';
-import {Navbar} from "../index";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({

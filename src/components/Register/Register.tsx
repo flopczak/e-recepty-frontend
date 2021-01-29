@@ -11,8 +11,6 @@ import { clear } from "../../actions/errors"
 import {Redirect, useHistory} from "react-router";
 import { sha256 } from "js-sha256";
 
-
-
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),

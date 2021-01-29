@@ -6,7 +6,9 @@ import * as yup from "yup";
 import TextFieldWrapper from "../TextFieldWrapper/TextFieldWrapper";
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-
+import axios from "axios";
+import {connect} from 'react-redux';
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,7 +37,7 @@ const validationSchema = yup.object().shape({
 })
 
 
-const displaySearch = (classes) => {
+const displaySearch = (classes, token) => {
     return(
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -49,7 +51,16 @@ const displaySearch = (classes) => {
                         validationSchema={validationSchema}
                         onSubmit={(data,{setSubmitting}) => {
                             setSubmitting(true)
-
+                            console.log("DDDD")
+                            axios.get(`https://recepty.eu.ngrok.io/api/prescription/${data.searchInfo}`,{
+                                headers: {"Authorization" : `Bearer ${token}`}
+                            })
+                                .then((response) => {
+                                    console.log(response)
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                })
                             setSubmitting(false)
                         }}
                 >
@@ -69,10 +80,50 @@ const displaySearch = (classes) => {
 
 const RealisePrescription = (props: any) => {
     const classes = useStyles();
+    const history = useHistory();
     return(
         <div>
-            {displaySearch(classes)}
+            {/*{displaySearch(classes, props.token)}*/}
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Typography component="h1" variant="h5">
+                        Recepta do zrealizowania
+                    </Typography>
+                    <Formik initialValues={{
+                        searchInfo: "",
+                    }}
+                            // validationSchema={validationSchema}
+                            onSubmit={(data,{setSubmitting}) => {
+                                setSubmitting(true)
+                                axios.get(`https://recepty.eu.ngrok.io/api/prescription/${data.searchInfo}`,{
+                                    headers: {"Authorization" : `Bearer ${props.token}`}
+                                })
+                                    .then((response) => {
+                                        console.log(response)
+                                        history.push({pathname: `/realisePrescription/${data.searchInfo}`, state: response.data} );
+                                    })
+                                    .catch((err) => {
+                                        //TODO swall error
+                                        console.log(err);
+                                    })
+                                setSubmitting(false)
+                            }}
+                    >
+                        {({values, handleSubmit, isSubmitting}) => (
+                                <Form onSubmit={handleSubmit} className={classes.form}>
+                                    <Field placeholder={"searchInfo"} label={"QR code"} variant="outlined" margin="normal" name={"searchInfo"} type={"input"} as={TextFieldWrapper}/>
+                                    <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Zrealizuj</Button>
+                                </Form>
+                        )}
+                    </Formik>
+                </div>
+            </Container>
         </div>
     )
 }
-export default RealisePrescription
+
+const mapStateToProps = (state) => ({
+    token: state.auth.token
+});
+export default connect(mapStateToProps)(RealisePrescription)
