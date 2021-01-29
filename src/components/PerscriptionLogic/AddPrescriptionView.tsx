@@ -140,17 +140,6 @@ const AddPrescriptionView = (props: any) => {
                                            fullWidth
                                            as={TextFieldWrapper}
                                     />
-                                    {/*<TextField placeholder={"Opis"}*/}
-                                    {/*                  label={"Opis"}*/}
-                                    {/*                  variant="outlined"*/}
-                                    {/*                  margin="normal"*/}
-                                    {/*                  name={"description"}*/}
-                                    {/*                  type={"input"}*/}
-                                    {/*                  multiline*/}
-                                    {/*                  rows={3}*/}
-                                    {/*                  rowsMax={3}*/}
-                                    {/*                  fullWidth*/}
-                                    {/*                  />*/}
                                     <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Stwórz</Button>
                                 </Form>
                             </MuiPickersUtilsProvider>

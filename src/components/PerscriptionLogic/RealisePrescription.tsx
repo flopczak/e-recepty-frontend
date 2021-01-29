@@ -9,6 +9,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import axios from "axios";
 import {connect} from 'react-redux';
 import {useHistory} from "react-router";
+import CodeReader from "../QrCodeReader/CodeReader";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -37,53 +38,11 @@ const validationSchema = yup.object().shape({
 })
 
 
-const displaySearch = (classes, token) => {
-    return(
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    Recepta do zrealizowania
-                </Typography>
-                <Formik initialValues={{
-                    searchInfo: "",
-                }}
-                        validationSchema={validationSchema}
-                        onSubmit={(data,{setSubmitting}) => {
-                            setSubmitting(true)
-                            console.log("DDDD")
-                            axios.get(`https://recepty.eu.ngrok.io/api/prescription/${data.searchInfo}`,{
-                                headers: {"Authorization" : `Bearer ${token}`}
-                            })
-                                .then((response) => {
-                                    console.log(response)
-                                })
-                                .catch((err) => {
-                                    console.log(err);
-                                })
-                            setSubmitting(false)
-                        }}
-                >
-                    {({values, handleSubmit, isSubmitting}) => (
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <Form onSubmit={handleSubmit} className={classes.form}>
-                                <Field placeholder={"searchInfo"} label={"QR code"} variant="outlined" margin="normal" name={"searchinfo"} type={"input"} as={TextFieldWrapper}/>
-                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Zrealizuj</Button>
-                            </Form>
-                        </MuiPickersUtilsProvider>
-                    )}
-                </Formik>
-            </div>
-        </Container>
-    )
-}
-
 const RealisePrescription = (props: any) => {
     const classes = useStyles();
     const history = useHistory();
     return(
         <div>
-            {/*{displaySearch(classes, props.token)}*/}
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
@@ -117,6 +76,7 @@ const RealisePrescription = (props: any) => {
                                 </Form>
                         )}
                     </Formik>
+                    <CodeReader />
                 </div>
             </Container>
         </div>
