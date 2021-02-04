@@ -40,8 +40,6 @@ const validationSchema = yup.object().shape({
     password: yup.string().required()
 })
 
-//TODO walidacja tego < pozostałej ilosci
-//TODO swal podczas sukcesu
 const PrescriptionExecutor = (props: any) => {
     const classes = useStyles();
     const history = useHistory();
@@ -66,7 +64,7 @@ const PrescriptionExecutor = (props: any) => {
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Typography component="h1" variant="h5">
-                        Nowa Recepta
+                        Realizacja recepty
                     </Typography>
                     <Formik initialValues={{
                         pesel: state.pesel,
@@ -94,12 +92,10 @@ const PrescriptionExecutor = (props: any) => {
                     >
                         {({values, handleSubmit, isSubmitting}) => (
                             <Form onSubmit={handleSubmit} className={classes.form}>
-                                {/*<Field component={DatePicker} disabled name="expiration" label="Data wygaśnięcia" varint={"outlined"} />*/}
                                 <Field placeholder={"Data wygaśnięcia"} disabled label={"Data wygaśnięcia"} variant="outlined" margin="normal" name={"expiration"} type={"input"} as={TextFieldWrapper}/>
                                 <Field placeholder={"Pesel pacjenta"} disabled label={"Pesel pacjenta"} variant="outlined" margin="normal" name={"pesel"} type={"input"} as={TextFieldWrapper}/>
                                 <Field placeholder={"Numer PWZ"} disabled label={"Numer PWZ"}  variant="outlined" margin="normal" name={"pwz"} type={"input"} as={TextFieldWrapper}/>
                                 <Field placeholder={"Krótki opis"} disabled label={"Krótki opis"} variant="outlined" margin="normal" name={"shortDescription"} type={"input"} as={TextFieldWrapper}/>
-                                <Field placeholder={"Imię i nazwisko lekarza"} disabled label={"Imię i nazwisko lekarza"}  variant="outlined" margin="normal" name={"doctorName"} type={"input"} as={TextFieldWrapper}/>
                                 {capturedState.medications.map((field, idx) => {
                                     return(
                                         <Grid container >
@@ -113,21 +109,10 @@ const PrescriptionExecutor = (props: any) => {
                                             </Grid>
                                             <Grid item xs={4}>
                                                 <Grid alignItems={"center"} alignContent={'space-between'} container>
-                                                    {/*<Grid item xs={2}>*/}
-                                                    {/*    <IconButton  size={"small"} onClick={() => handleDecrement(idx)}>*/}
-                                                    {/*        <IndeterminateCheckBoxIcon/>*/}
-                                                    {/*    </IconButton>*/}
-                                                    {/*</Grid>*/}
                                                     <Grid item xs={12}>
                                                         <Field  key={`medications.${idx}.amountRequested`}  placeholder={"Ilość"} label={"Ilość"} variant="outlined"
                                                                 margin="normal" name={`medications.${idx}.amountRequested`} type={"input"} as={TextFieldWrapper}/>
                                                     </Grid>
-                                                    {/*<Grid item xs={2}>*/}
-                                                    {/*    <IconButton size={"small"} onClick={() => handleIncrement(idx)}>*/}
-                                                    {/*        <AddBox/>*/}
-                                                    {/*    </IconButton>*/}
-
-                                                    {/*</Grid>*/}
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -146,7 +131,7 @@ const PrescriptionExecutor = (props: any) => {
                                        fullWidth
                                        as={TextFieldWrapper}
                                 />
-                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Stwórz</Button>
+                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Zrealizuj</Button>
                             </Form>
                         )}
                     </Formik>

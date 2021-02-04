@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Formik, Field, Form } from "formik";
 import {makeStyles} from '@material-ui/core/styles';
-import {Button, Container, Typography, CssBaseline, TextField, Grid} from "@material-ui/core";
+import {Button, Container, Typography, CssBaseline, TextField, Grid, IconButton} from "@material-ui/core";
 import * as yup from "yup";
+import Swal from "sweetalert2"
 import TextFieldWrapper from "../TextFieldWrapper/TextFieldWrapper";
 import {
     DatePicker,
@@ -11,7 +12,7 @@ import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import {connect} from 'react-redux';
 import { sha256 } from "js-sha256";
-
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import axios from "axios";
 
 
@@ -84,7 +85,7 @@ const AddPrescriptionView = (props: any) => {
                         medications:[ {name: "", quantity: ""} ]
                     }}
                             // validationSchema={validationSchema}
-                            onSubmit={(data,{setSubmitting}) => {
+                            onSubmit={(data,{setSubmitting, resetForm}) => {
                                 setSubmitting(true)
                                 const number = sha256(Date.now().toString());
                                 const mapedMedicines = mapObject(data.medications);
@@ -94,8 +95,12 @@ const AddPrescriptionView = (props: any) => {
                                     headers: {"Authorization" : `Bearer ${props.token}`}
                                 })
                                     .then((response) => {
-                                        //TODO swal udało się i czyszczenie pól
-                                        console.log(response)
+                                        Swal.fire({
+                                            title: "Sukces!",
+                                            text: "Udało się dodać nową receptę.",
+                                            icon: "success",
+                                        })
+                                        resetForm();
                                     })
                                     .catch((err) => {
                                         console.log(err);
@@ -108,12 +113,10 @@ const AddPrescriptionView = (props: any) => {
                                 <Form onSubmit={handleSubmit} className={classes.form}>
                                     <Field component={DatePicker} name="expiration" label="Data wygaśnięcia" varint={"outlined"} />
                                     <Field placeholder={"Pesel pacjenta"} label={"Pesel pacjenta"} variant="outlined" margin="normal" name={"pesel"} type={"input"} as={TextFieldWrapper}/>
-                                    <Field placeholder={"Numer PWZ"} label={"Numer PWZ"}  variant="outlined" margin="normal" name={"pwz"} type={"input"} as={TextFieldWrapper}/>
                                     <Field placeholder={"Krótki opis"} label={"Krótki opis"} variant="outlined" margin="normal" name={"shortDescription"} type={"input"} as={TextFieldWrapper}/>
-                                    <Field placeholder={"Imię i nazwisko lekarza"} label={"Imię i nazwisko lekarza"}  variant="outlined" margin="normal" name={"doctorName"} type={"input"} as={TextFieldWrapper}/>
-                                    <button type="button" onClick={() => addNewRow()}>
-                                        +
-                                    </button>
+                                    <IconButton color={"primary"} type="button" onClick={() => addNewRow()}>
+                                        <AddBoxIcon/>
+                                    </IconButton>
                                     {leki.medications.map((field, idx) => {
                                         return(
                                             <Grid container >
@@ -122,7 +125,7 @@ const AddPrescriptionView = (props: any) => {
                                                            margin="normal" name={`medications.${idx}.name`} type={"input"} as={TextFieldWrapper}/>
                                                 </Grid>
                                                 <Grid item xs={6}>
-                                                    <Field  key={`medications.${idx}.quantity`} placeholder={"Ilość"} label={"Ilość"} variant="outlined"
+                                                    <Field  key={`medications.${idx}.quantity`} placeholder={"Ilość/liczba opakowań"} label={"Ilość/liczba opakowań"} variant="outlined"
                                                            margin="normal" name={`medications.${idx}.quantity`} type={"input"} as={TextFieldWrapper}/>
                                                 </Grid>
                                             </Grid>

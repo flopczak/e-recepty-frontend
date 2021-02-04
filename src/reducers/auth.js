@@ -39,7 +39,6 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
     case REGISTER_SUCCESS:
-      console.log(state);
       return {
         ...state,
         ...action.payload,

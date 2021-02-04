@@ -4,8 +4,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
@@ -33,16 +31,7 @@ const StyledMenu = withStyles({
     />
 ));
 
-const StyledMenuItem = withStyles((theme) => ({
-    root: {
-        // '&:focus': {
-        //     backgroundColor: theme.palette.primary.main,
-        //     '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        //         color: theme.palette.common.white,
-        //     },
-        // },
-    },
-}))(MenuItem);
+const StyledMenuItem = withStyles((theme) => ({}))(MenuItem);
 
 const MyMenu = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -77,12 +66,6 @@ const MyMenu = (props) => {
                         <SendIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="Dodaj recepte" />
-                </StyledMenuItem>
-                <StyledMenuItem onClick={() => handleMenuClick("user") }>
-                    <ListItemIcon>
-                        <DraftsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Historia recept pacjenta" />
                 </StyledMenuItem>
             </StyledMenu>
         </div>
