@@ -63,7 +63,6 @@ const RealisePrescription = (props: any) => {
                                         history.push({pathname: `/realisePrescription/${data.searchInfo}`, state: response.data} );
                                     })
                                     .catch((err) => {
-                                        //TODO swall error
                                         console.log(err);
                                     })
                                 setSubmitting(false)
@@ -71,7 +70,7 @@ const RealisePrescription = (props: any) => {
                     >
                         {({values, handleSubmit, isSubmitting}) => (
                                 <Form onSubmit={handleSubmit} className={classes.form}>
-                                    <Field placeholder={"searchInfo"} label={"QR code"} variant="outlined" margin="normal" name={"searchInfo"} type={"input"} as={TextFieldWrapper}/>
+                                    <Field placeholder={"searchInfo"} label={"ID recepty"} variant="outlined" margin="normal" name={"searchInfo"} type={"input"} as={TextFieldWrapper}/>
                                     <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Zrealizuj</Button>
                                 </Form>
                         )}

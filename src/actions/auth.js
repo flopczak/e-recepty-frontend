@@ -1,5 +1,6 @@
 import axios from "axios";
-
+import Swal from "sweetalert2";
+import {useHistory} from "react-router";
 import {
   USER_LOADED,
   USER_LOADING,
@@ -39,7 +40,6 @@ export const login = (pwz, password) => (dispatch) => {
   axios
     .post("https://recepty.eu.ngrok.io/doctor/login", body, config)
     .then((res) => {
-      console.log(res);
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
@@ -68,10 +68,15 @@ export const register = ({ pwz, password, name }) => (dispatch) => {
   };
 
   const body = JSON.stringify({ pwz, password, name });
-  console.log(body);
   axios
     .post("https://recepty.eu.ngrok.io/doctor/register", body, config)
     .then((res) => {
+      console.log(res, "succ")
+      Swal.fire({
+        title: "Sukces!",
+        text: "Proces rejestracji przebiegł pomyślnie.",
+        icon: "success"
+      })
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
@@ -89,6 +94,11 @@ export const register = ({ pwz, password, name }) => (dispatch) => {
         type: GET_ERRORS,
         payload: error
       });
+      Swal.fire({
+        title: "Błąd!",
+        text: "Nie udało się zarejestrować użytkownika.",
+        icon: "error"
+      })
     });
 };
 

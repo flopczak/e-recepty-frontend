@@ -32,18 +32,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-//TODO poprawić walidacje
 const validationSchema = yup.object().shape({
-    login: yup.string()
-        .required("Pole login nie może być puste")
-        .min(4, "Pole login musi zawierać conajmniej 4 znaki")
-        .max(15, "Pole login może zawierać maksymalnie 15 znaków"),
+    name: yup.string()
+        .required("Pole Imię nie może być puste")
+        .min(2, "Imię musi zawierać conajmniej 2 znaki")
+        .max(25, "Imię może zawierać maksymalnie 25 znaków"),
+    surname: yup.string()
+        .required("Pole Nazwisko nie może być puste"),
     password: yup.string().required("Pole hasło nie może być puste")
         .min(8, "Hasło musi zawierać conajmniej 8 znaków")
-        .max(25, "Hasło może zawierać maksymalnie 25 znaków"),
-        // .matches(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/, "Hasło musi zawierać conajmniej jedną wielką literę, jedną małą, jedną cyfrę oraz jeden znak specjalny"),
-    email: yup.string().email().required(),
-    password2: yup.string().required()
+        .max(25, "Hasło może zawierać maksymalnie 25 znaków")
+        .matches(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/, "Hasło musi zawierać conajmniej jedną wielką literę, jedną małą, jedną cyfrę oraz jeden znak specjalny"),
+    pwz: yup.string().required("Pole pwz nie może być puste").matches(/^[0-9]*$/, "Numer pwz to liczby")
+        .min(7, 'Numer pwz musi zawierać dokładnie 7 liczb')
+        .max(7, 'Numer pwz musi zawierać dokładnie 7 liczb'),
+    password2: yup.string().required("Pole z potwierdzeniem hasła nie może byc puste")
 })
 
 interface RegisterProps {
@@ -69,8 +72,8 @@ const isLoged = ( props: RegisterProps, classes, history) => {
                         Rejestracja
                     </Typography>
                     <Formik initialValues={{pwz: "", password: "", surname: "" , name:"" ,password2: ""}}
-                            // validationSchema={validationSchema}
-                            onSubmit={(data,{setSubmitting}) => {
+                            validationSchema={validationSchema}
+                            onSubmit={(data,{setSubmitting, resetForm}) => {
                                 setSubmitting(true)
                                 if (data.password !== data.password2 ){
                                     passMatch = false;
@@ -83,6 +86,7 @@ const isLoged = ( props: RegisterProps, classes, history) => {
                                         name: `${data.name} ${data.surname}`})
                                 }
                                 setSubmitting(false)
+                                resetForm();
                             }}
                     >
                         {({values, handleSubmit, isSubmitting}) => (

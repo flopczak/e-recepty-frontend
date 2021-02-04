@@ -52,11 +52,9 @@ const CodeReader = (props) =>  {
                 headers: {"Authorization" : `Bearer ${props.token}`}
             })
                 .then((response) => {
-                    console.log(response)
                     history.push({pathname: `/realisePrescription/${result.text}`, state: response.data} );
                 })
                 .catch((err) => {
-                    //TODO swall error
                     console.log(err);
                 })
         }

@@ -17,6 +17,7 @@
     "@types/react-router": "^5.1.8",
     "@types/yup": "^0.29.9",
     "axios": "^0.21.0",
+    "chai": "^4.2.0",
     "date-fns": "^2.16.1",
     "formik": "^2.2.5",
     "formik-material-ui-pickers": "^0.0.12",
@@ -31,7 +32,9 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "selenium-webdriver": "^4.0.0-alpha.8",
     "styled-components": "^5.2.1",
+    "sweetalert2": "^10.14.0",
     "typescript": "^4.0.5",
     "use-react-router": "^1.0.7",
     "web-vitals": "^0.2.4",
@@ -40,7 +43,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "cucumber-js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -62,6 +65,7 @@
     ]
   },
   "devDependencies": {
+    "cucumber": "5.0.1",
     "react-redux": "^7.2.2"
   }
 }

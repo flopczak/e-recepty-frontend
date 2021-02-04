@@ -1,15 +1,12 @@
 import React from 'react';
 import {Formik, Field, Form } from "formik";
 import {makeStyles} from '@material-ui/core/styles';
-import {Button, Container, Typography, CssBaseline, TextField} from "@material-ui/core";
+import {Button, Container, Typography, CssBaseline} from "@material-ui/core";
 import * as yup from "yup";
 import TextFieldWrapper from "../TextFieldWrapper/TextFieldWrapper";
-import {MuiPickersUtilsProvider} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 import {useHistory} from "react-router";
 import axios from "axios";
 import { connect } from "react-redux";
-import {UserPrescriptionsView } from "../index";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +54,6 @@ const displaySearch = (classes, history, token) => {
                                     headers: {"Authorization" : `Bearer ${token}`}
                                 })
                                     .then((response) => {
-                                        //TODO warunek sprawdzający czy tablica recept istnieje
                                         console.log(response)
                                         history.push({ pathname:`/user/${data.searchInfo}`, state:{ response }})
                                     })
@@ -79,7 +75,7 @@ const displaySearch = (classes, history, token) => {
     )
 }
 
-const PrescriptionViewer = (props: any) => {
+const PatientHistorySearch = (props: any) => {
     const classes = useStyles();
     const history = useHistory();
     const token = props.token;
@@ -94,4 +90,4 @@ const mapStateToProps = (state) => ({
     token: state.auth.token
 });
 
-export default connect(mapStateToProps)(PrescriptionViewer)
+export default connect(mapStateToProps)(PatientHistorySearch);

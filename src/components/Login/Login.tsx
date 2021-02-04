@@ -33,14 +33,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const validationSchema = yup.object().shape({
-    login: yup.string()
-                .required("Pole login nie może być puste")
-                .min(4, "Pole login musi zawierać conajmniej 4 znaki")
-                .max(15, "Pole login może zawierać maksymalnie 15 znaków"),
+    pwz: yup.string().required("Pole pwz nie może być puste").matches(/^[0-9]*$/, "Numer pwz to liczby")
+        .min(7, 'Numer pwz musi zawierać dokładnie 7 liczb')
+        .max(7, 'Numer pwz musi zawierać dokładnie 7 liczb'),
     password: yup.string().required("Pole hasło nie może być puste")
         .min(8, "Hasło musi zawierać conajmniej 8 znaków")
         .max(25, "Hasło może zawierać maksymalnie 25 znaków")
-        // .matches(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/, "Hasło musi zawierać conajmniej jedną wielką literę, jedną małą, jedną cyfrę oraz jeden znak specjalny")
+        .matches(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/, "Hasło musi zawierać conajmniej jedną wielką literę, jedną małą, jedną cyfrę oraz jeden znak specjalny")
 })
 
 interface LoginProps {
@@ -65,7 +64,7 @@ const isLoged = ( props: LoginProps, classes) => {
                         Logowanie
                     </Typography>
                     <Formik initialValues={{pwz: "", password: ""}}
-                            // validationSchema={validationSchema}
+                            validationSchema={validationSchema}
                             onSubmit={(data,{setSubmitting}) => {
                                 setSubmitting(true)
                                 const pass =sha256(data.password)
@@ -79,7 +78,7 @@ const isLoged = ( props: LoginProps, classes) => {
                                 <Field placeholder={"PWZ"} label={"PWZ"} variant="outlined" margin="normal" name={"pwz"} type={"input"} as={TextFieldWrapper}/>
                                 <Field placeholder={"Hasło"} label={"Hasło"} variant="outlined" margin="normal" name={"password"} type={"password"} as={TextFieldWrapper}/>
                                 <ErrorHandler msg={msg}/>
-                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" color="primary" type={"submit"}>Zaloguj</Button>
+                                <Button className={classes.submit} disabled={isSubmitting} fullWidth variant="contained" name={"submit"} color="primary" type={"submit"}>Zaloguj</Button>
                                 <Grid container>
                                     <Grid item xs>
                                         <Link href="#" variant="body2">

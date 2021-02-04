@@ -66,7 +66,7 @@ const PrescriptionCard = (props: ShortenPrescription & StoreProp ) => {
     const handleClose = () => {
         setIsOpen(false);
     }
-//TODO zadecydować jakie dane wyswietlane
+
     return (
         <Card className={classes.root}>
             <CardContent>
