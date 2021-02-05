@@ -6,7 +6,16 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import {AddPrescriptionView, Navbar} from "./components";
 import {connect} from "react-redux";
 import PrescriptionExecutor from "./components/PerscriptionLogic/PrescriptionExecutor";
-import CodeReader from "./components/QrCodeReader/CodeReader";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    accept: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+}));
 
 const Routes = (props) => {
 
@@ -18,7 +27,7 @@ const Routes = (props) => {
               <></>
             )}
             <Switch>
-                <Route exact path="/accept" component={CodeReader} />
+                <Route exact path="/accept" component={AcceptView} />
                 <PrivateRoute exact path="/" component={MainView} />
                 <PrivateRoute exact path="/user/:id" component={UserPrescriptionsView} />
                 <PrivateRoute exact path="/prescription/:id" component={MainView} />
@@ -29,6 +38,15 @@ const Routes = (props) => {
             </Switch>
         </Container>
     );
+}
+
+const AcceptView = () => {
+    const classes = useStyles();
+    return(
+        <h1 className={classes.accept}>
+            Potwierdzono email
+        </h1>
+    )
 }
 
 const mapStateToProps = (state) => ({
